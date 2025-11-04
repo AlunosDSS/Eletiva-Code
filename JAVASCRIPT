@@ -1,0 +1,160 @@
+const eletivas = [
+    { nome: "Programação Web", vagas: 20, alunos: [] },
+    { nome: "Robótica e Inovação", vagas: 20, alunos: [] },
+    { nome: "Empreendedorismo Sustentável", vagas: 20, alunos: [] },
+    { nome: "Artes e Cultura Popular", vagas: 20, alunos: [] },
+    { nome: "Ciência e Tecnologia", vagas: 20, alunos: [] },
+    { nome: "Educação Financeira", vagas: 20, alunos: [] }
+];
+
+const alunosGerais = [];
+
+const loginScreen = document.getElementById("login-screen");
+const mainScreen = document.getElementById("main-screen");
+const listaScreen = document.getElementById("lista-screen");
+const entrarBtn = document.getElementById("entrar-btn");
+const nomeAlunoInput = document.getElementById("nomeAluno");
+const serieAlunoInput = document.getElementById("serieAluno");
+const welcomeText = document.getElementById("welcome");
+const eletivasList = document.getElementById("eletivas-list");
+const confirmarBtn = document.getElementById("confirmar-btn");
+const mensagem = document.getElementById("mensagem");
+const loginError = document.getElementById("login-error");
+const eletivaNome = document.getElementById("eletiva-nome");
+const vagasInfo = document.getElementById("vagas-info");
+const alunosLista = document.getElementById("alunos-lista");
+const sairBtn = document.getElementById("sair-btn");
+const toggleThemeBtn = document.getElementById("toggle-theme");
+
+const adminPanel = document.getElementById("admin-panel");
+const adminListas = document.getElementById("admin-listas");
+const fecharAdminBtn = document.getElementById("fechar-admin");
+
+let alunoAtual = null;
+let serieAtual = null;
+let eletivaEscolhida = null;
+
+// ===== LOGIN =====
+entrarBtn.addEventListener("click", () => {
+    const nome = nomeAlunoInput.value.trim();
+    const serie = serieAlunoInput.value;
+    if (!nome || !serie) {
+        loginError.textContent = "Preencha todos os campos obrigatórios!";
+        return;
+    }
+    alunoAtual = nome;
+    serieAtual = serie;
+    loginScreen.classList.add("hidden");
+    mainScreen.classList.remove("hidden");
+    welcomeText.textContent = `Bem-vindo(a), ${alunoAtual} (${serieAtual})!`;
+    renderEletivas();
+});
+
+// Renderização de Eletivas
+function renderEletivas() {
+    eletivasList.innerHTML = "";
+    eletivas.forEach((eletiva, idx) => {
+        const div = document.createElement("div");
+        div.className = "eletiva-item";
+        div.innerHTML = `
+            <input type="radio" name="eletiva" id="eletiva${idx}" value="${idx}" ${eletiva.vagas === 0 ? "disabled" : ""}>
+            <label for="eletiva${idx}">${eletiva.nome} - Vagas: ${eletiva.vagas}</label>
+        `;
+        eletivasList.appendChild(div);
+    });
+}
+
+// Confirmar Escolha
+confirmarBtn.addEventListener("click", () => {
+    const selecionada = document.querySelector('input[name="eletiva"]:checked');
+    if (!selecionada) {
+        mensagem.textContent = "Escolha uma eletiva!";
+        return;
+    }
+    const idx = parseInt(selecionada.value);
+    eletivaEscolhida = eletivas[idx];
+    if (eletivaEscolhida.vagas <= 0) {
+        mensagem.textContent = "Eletiva cheia, escolha outra!";
+        return;
+    }
+    eletivaEscolhida.alunos.push({ nome: alunoAtual, serie: serieAtual });
+    eletivaEscolhida.vagas--;
+    alunosGerais.push({ nome: alunoAtual, serie: serieAtual, eletiva: eletivaEscolhida.nome });
+    mainScreen.classList.add("hidden");
+    listaScreen.classList.remove("hidden");
+    renderLista();
+});
+
+// Renderiza lista de alunos na eletiva
+function renderLista() {
+    eletivaNome.textContent = `Eletiva: ${eletivaEscolhida.nome}`;
+    vagasInfo.textContent = `Vagas restantes: ${eletivaEscolhida.vagas}`;
+    alunosLista.innerHTML = "";
+    eletivaEscolhida.alunos.forEach(aluno => {
+        const li = document.createElement("li");
+        li.textContent = `${aluno.nome} (${aluno.serie})`;
+        li.dataset.serie = aluno.serie;
+        alunosLista.appendChild(li);
+    });
+}
+
+// Sair
+sairBtn.addEventListener("click", () => {
+    listaScreen.classList.add("hidden");
+    loginScreen.classList.remove("hidden");
+    nomeAlunoInput.value = "";
+    serieAlunoInput.value = "";
+    alunoAtual = null;
+    serieAtual = null;
+    eletivaEscolhida = null;
+});
+
+// Tema
+toggleThemeBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+});
+
+// ====== PAINEL ADMIN ======
+document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.shiftKey && e.code === "KeyA") {
+        toggleAdminPanel();
+    }
+});
+
+function toggleAdminPanel() {
+    const visivel = !adminPanel.classList.contains("hidden");
+    if (visivel) {
+        adminPanel.classList.add("hidden");
+    } else {
+        renderAdmin();
+        adminPanel.classList.remove("hidden");
+    }
+}
+
+fecharAdminBtn.addEventListener("click", () => {
+    adminPanel.classList.add("hidden");
+});
+
+// Renderiza todas as listas no painel admin
+function renderAdmin() {
+    adminListas.innerHTML = "";
+    eletivas.forEach(eletiva => {
+        const div = document.createElement("div");
+        div.className = "admin-box"; // <- Use classe CSS, sem estilo inline
+
+        const titulo = document.createElement("h3");
+        titulo.textContent = `${eletiva.nome} - Vagas restantes: ${eletiva.vagas}`;
+        div.appendChild(titulo);
+
+        const lista = document.createElement("ul");
+        eletiva.alunos.forEach(aluno => {
+            const li = document.createElement("li");
+            li.textContent = `${aluno.nome} (${aluno.serie})`;
+            li.dataset.serie = aluno.serie;
+            lista.appendChild(li);
+        });
+
+        div.appendChild(lista);
+        adminListas.appendChild(div);
+    });
+}
