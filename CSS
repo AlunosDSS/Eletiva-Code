@@ -1,0 +1,237 @@
+/* ====== RESET E GERAL ====== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(120deg, #008037, #ffd700);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.5s ease, color 0.5s ease;
+    padding: 20px;
+}
+
+/* ====== CONTAINER PRINCIPAL ====== */
+#app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    gap: 20px;
+    position: relative;
+}
+
+/* ====== BOTÃO DE TEMA ====== */
+.theme-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(90deg, #006400, #ffd700);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+.theme-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+}
+
+/* ====== TELAS ====== */
+.screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 800px;
+    transition: background 0.5s ease, color 0.5s ease;
+}
+.hidden { display: none; }
+.error { color: red; font-size: 0.9em; margin-top: 10px; }
+
+/* ====== LOGIN ====== */
+.login-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 500px;
+}
+
+.bandeira {
+    width: 100px;
+    height: 75px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    border: 2px solid #006400;
+}
+
+.login-box h2 { color: #007bff; margin-bottom: 5px; font-size: 1.5em; }
+.login-box h3 { color: #008037; margin-top: 0; margin-bottom: 15px; font-size: 1.2em; }
+
+label { display: block; text-align: left; font-weight: bold; color: inherit; margin-top: 10px; }
+.necessario { color: red; font-weight: bold; }
+
+input, select {
+    width: 100%;
+    margin: 8px 0 15px 0;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    background: #fff;
+    color: #000;
+    transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
+/* ====== BOTÕES ====== */
+button {
+    background: linear-gradient(90deg, #006400, #ffd700);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 1em;
+}
+button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(90deg, #008037, #ffc107);
+}
+
+/* ====== ELETIVAS ====== */
+.eletivas-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    justify-content: center;
+}
+
+.eletiva-item {
+    flex: 1 1 250px; /* ocupa espaço disponível, mínimo 250px */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 15px;
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* ====== LISTAS DE ALUNOS ====== */
+ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+    width: 100%;
+}
+
+ul li {
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 6px;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* Cores por série */
+ul li[data-serie="9º Ano"] { background: #ffe0b2; color: #000; }
+ul li[data-serie="1º A"] { background: #ffccbc; color: #000; }
+ul li[data-serie="1º B"] { background: #dcedc8; color: #000; }
+ul li[data-serie="2º A"] { background: #c5cae9; color: #000; }
+ul li[data-serie="2º B"] { background: #f8bbd0; color: #000; }
+ul li[data-serie="3º A"] { background: #b2dfdb; color: #000; }
+ul li[data-serie="3º B"] { background: #fff9c4; color: #000; }
+
+/* ====== RESPONSIVIDADE FLEX ====== */
+@media screen and (max-width: 768px) {
+    #app { padding: 10px; }
+    .bandeira { width: 80px; height: 60px; }
+    h2 { font-size: 1.3em; }
+    h3 { font-size: 1em; }
+    input, select, button { font-size: 0.95em; padding: 10px; }
+    .eletiva-item { flex: 1 1 100%; }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    h2 { font-size: 1.5em; }
+    h3 { font-size: 1.1em; }
+    input, select, button { font-size: 1em; padding: 12px; }
+    .eletiva-item { flex: 1 1 45%; }
+}
+
+@media screen and (min-width: 1025px) {
+    #app { max-width: 1000px; }
+    .eletiva-item { flex: 1 1 30%; }
+}
+
+/* ====== TEMA ESCURO ====== */
+.dark-mode body {
+    background: linear-gradient(120deg, #002200, #111);
+    color: #eee;
+}
+
+.dark-mode .screen, 
+.dark-mode .login-box, 
+.dark-mode .eletiva-item {
+    background: rgba(25, 25, 25, 0.95);
+    color: #eee;
+}
+
+.dark-mode input, .dark-mode select {
+    background: #333;
+    color: #fff;
+    border: 1px solid #666;
+}
+
+.dark-mode .theme-btn {
+    background: linear-gradient(90deg, #222, #555);
+    color: #ffd700;
+}
+.admin-box {
+    flex: 1 1 250px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.4s ease;
+}
+
+.dark-mode .admin-box {
+    background: #1e1e1e !important;
+    color: #eee !important;
+    border-color: #555 !important;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2) !important;
+}
