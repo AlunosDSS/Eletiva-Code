@@ -1,10 +1,10 @@
 const eletivas = [
-    { nome: "Programação Web", vagas: 20, alunos: [] },
-    { nome: "Robótica e Inovação", vagas: 20, alunos: [] },
-    { nome: "Empreendedorismo Sustentável", vagas: 20, alunos: [] },
-    { nome: "Artes e Cultura Popular", vagas: 20, alunos: [] },
-    { nome: "Ciência e Tecnologia", vagas: 20, alunos: [] },
-    { nome: "Educação Financeira", vagas: 20, alunos: [] }
+    { nome: "Programação Web", vagas: 20, alunos: [], icon: "💻" },
+    { nome: "Robótica e Inovação", vagas: 20, alunos: [], icon: "🤖" },
+    { nome: "Empreendedorismo Sustentável", vagas: 20, alunos: [], icon: "🌱" },
+    { nome: "Artes e Cultura Popular", vagas: 20, alunos: [], icon: "🎨" },
+    { nome: "Ciência e Tecnologia", vagas: 20, alunos: [], icon: "🔬" },
+    { nome: "Educação Financeira", vagas: 20, alunos: [], icon: "💰" }
 ];
 
 const alunosGerais = [];
@@ -33,6 +33,7 @@ const fecharAdminBtn = document.getElementById("fechar-admin");
 let alunoAtual = null;
 let serieAtual = null;
 let eletivaEscolhida = null;
+let selectedCard = null;
 
 // ===== LOGIN =====
 entrarBtn.addEventListener("click", () => {
@@ -54,13 +55,54 @@ entrarBtn.addEventListener("click", () => {
 function renderEletivas() {
     eletivasList.innerHTML = "";
     eletivas.forEach((eletiva, idx) => {
-        const div = document.createElement("div");
-        div.className = "eletiva-item";
-        div.innerHTML = `
+        const card = document.createElement("div");
+        card.className = `eletiva-card ${eletiva.vagas === 0 ? 'disabled' : ''}`;
+        
+        const isLowVagas = eletiva.vagas > 0 && eletiva.vagas <= 5;
+        const vagasClass = isLowVagas ? 'low-vagas' : '';
+        
+        card.innerHTML = `
             <input type="radio" name="eletiva" id="eletiva${idx}" value="${idx}" ${eletiva.vagas === 0 ? "disabled" : ""}>
-            <label for="eletiva${idx}">${eletiva.nome} - Vagas: ${eletiva.vagas}</label>
+            <label for="eletiva${idx}" class="eletiva-label">
+                <div class="eletiva-icon">${eletiva.icon}</div>
+                <div class="eletiva-name">${eletiva.nome}</div>
+                <div class="eletiva-vagas ${vagasClass}">${eletiva.vagas} vaga(s)</div>
+            </label>
         `;
-        eletivasList.appendChild(div);
+        
+        const radio = card.querySelector('input[type="radio"]');
+        radio.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                // Remove seleção anterior
+                if (selectedCard) {
+                    selectedCard.classList.remove('selected');
+                }
+                // Adiciona seleção atual
+                card.classList.add('selected');
+                selectedCard = card;
+                
+                // Efeito visual de confirmação
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    card.style.transform = '';
+                }, 150);
+            }
+        });
+        
+        // Efeito hover mesmo sem seleção
+        card.addEventListener('mouseenter', () => {
+            if (!card.classList.contains('disabled') && !card.classList.contains('selected')) {
+                card.style.transform = 'translateY(-3px) scale(1.02)';
+            }
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            if (!card.classList.contains('disabled') && !card.classList.contains('selected')) {
+                card.style.transform = '';
+            }
+        });
+        
+        eletivasList.appendChild(card);
     });
 }
 
@@ -69,6 +111,8 @@ confirmarBtn.addEventListener("click", () => {
     const selecionada = document.querySelector('input[name="eletiva"]:checked');
     if (!selecionada) {
         mensagem.textContent = "Escolha uma eletiva!";
+        mensagem.style.animation = 'shake 0.5s ease-in-out';
+        setTimeout(() => mensagem.style.animation = '', 500);
         return;
     }
     const idx = parseInt(selecionada.value);
@@ -77,12 +121,22 @@ confirmarBtn.addEventListener("click", () => {
         mensagem.textContent = "Eletiva cheia, escolha outra!";
         return;
     }
+    
+    // Efeito visual de confirmação
+    confirmarBtn.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        confirmarBtn.style.transform = '';
+    }, 150);
+    
     eletivaEscolhida.alunos.push({ nome: alunoAtual, serie: serieAtual });
     eletivaEscolhida.vagas--;
     alunosGerais.push({ nome: alunoAtual, serie: serieAtual, eletiva: eletivaEscolhida.nome });
-    mainScreen.classList.add("hidden");
-    listaScreen.classList.remove("hidden");
-    renderLista();
+    
+    setTimeout(() => {
+        mainScreen.classList.add("hidden");
+        listaScreen.classList.remove("hidden");
+        renderLista();
+    }, 300);
 });
 
 // Renderiza lista de alunos na eletiva
@@ -90,28 +144,55 @@ function renderLista() {
     eletivaNome.textContent = `Eletiva: ${eletivaEscolhida.nome}`;
     vagasInfo.textContent = `Vagas restantes: ${eletivaEscolhida.vagas}`;
     alunosLista.innerHTML = "";
-    eletivaEscolhida.alunos.forEach(aluno => {
+    eletivaEscolhida.alunos.forEach((aluno, index) => {
         const li = document.createElement("li");
         li.textContent = `${aluno.nome} (${aluno.serie})`;
         li.dataset.serie = aluno.serie;
+        
+        // Efeito de entrada sequencial
+        li.style.opacity = '0';
+        li.style.transform = 'translateX(-20px)';
+        setTimeout(() => {
+            li.style.transition = 'all 0.4s ease';
+            li.style.opacity = '1';
+            li.style.transform = 'translateX(0)';
+        }, index * 100);
+        
         alunosLista.appendChild(li);
     });
 }
 
 // Sair
 sairBtn.addEventListener("click", () => {
-    listaScreen.classList.add("hidden");
-    loginScreen.classList.remove("hidden");
+    // Efeito de saída
+    listaScreen.style.opacity = '1';
+    let opacity = 1;
+    const fadeOut = setInterval(() => {
+        opacity -= 0.05;
+        listaScreen.style.opacity = opacity;
+        if (opacity <= 0) {
+            clearInterval(fadeOut);
+            listaScreen.classList.add("hidden");
+            loginScreen.classList.remove("hidden");
+            listaScreen.style.opacity = '1';
+        }
+    }, 30);
+    
     nomeAlunoInput.value = "";
     serieAlunoInput.value = "";
     alunoAtual = null;
     serieAtual = null;
     eletivaEscolhida = null;
+    selectedCard = null;
 });
 
 // Tema
 toggleThemeBtn.addEventListener("click", () => {
     document.body.classList.toggle("dark-mode");
+    toggleThemeBtn.style.transform = 'rotate(180deg)';
+    setTimeout(() => {
+        toggleThemeBtn.style.transform = '';
+    }, 300);
 });
 
 // ====== PAINEL ADMIN ======
@@ -140,17 +221,27 @@ function renderAdmin() {
     adminListas.innerHTML = "";
     eletivas.forEach(eletiva => {
         const div = document.createElement("div");
-        div.className = "admin-box"; // <- Use classe CSS, sem estilo inline
+        div.className = "admin-box";
 
         const titulo = document.createElement("h3");
         titulo.textContent = `${eletiva.nome} - Vagas restantes: ${eletiva.vagas}`;
         div.appendChild(titulo);
 
         const lista = document.createElement("ul");
-        eletiva.alunos.forEach(aluno => {
+        eletiva.alunos.forEach((aluno, index) => {
             const li = document.createElement("li");
             li.textContent = `${aluno.nome} (${aluno.serie})`;
             li.dataset.serie = aluno.serie;
+            
+            // Efeito de entrada
+            li.style.opacity = '0';
+            li.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                li.style.transition = 'all 0.3s ease';
+                li.style.opacity = '1';
+                li.style.transform = 'translateY(0)';
+            }, index * 50);
+            
             lista.appendChild(li);
         });
 
@@ -158,3 +249,14 @@ function renderAdmin() {
         adminListas.appendChild(div);
     });
 }
+
+// Adicionar animação de shake para erros
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+`;
+document.head.appendChild(style);
