@@ -1,0 +1,543 @@
+// Dados das eletivas
+const eletivas = [
+    { 
+        nome: "Programação Web", 
+        vagas: 20, 
+        alunos: [], 
+        icon: "💻",
+        descricao: "Aprenda HTML, CSS e JavaScript para criar sites incríveis"
+    },
+    { 
+        nome: "Robótica e Inovação", 
+        vagas: 20, 
+        alunos: [], 
+        icon: "🤖",
+        descricao: "Explore o mundo da robótica e da tecnologia criativa"
+    },
+    { 
+        nome: "Empreendedorismo Sustentável", 
+        vagas: 20, 
+        alunos: [], 
+        icon: "🌱",
+        descricao: "Desenvolva ideias de negócios com responsabilidade ambiental"
+    },
+    { 
+        nome: "Artes e Cultura Popular", 
+        vagas: 20, 
+        alunos: [], 
+        icon: "🎨",
+        descricao: "Conheça e pratique diferentes formas de expressão artística"
+    },
+    { 
+        nome: "Ciência e Tecnologia", 
+        vagas: 20, 
+        alunos: [], 
+        icon: "🔬",
+        descricao: "Descubra os mistérios da ciência e suas aplicações tecnológicas"
+    },
+    { 
+        nome: "Educação Financeira", 
+        vagas: 20, 
+        alunos: [], 
+        icon: "💰",
+        descricao: "Aprenda a administrar seu dinheiro de forma inteligente"
+    }
+];
+
+// Array para armazenar todos os alunos
+const alunosGerais = [];
+
+// Elementos da DOM
+const loginScreen = document.getElementById("login-screen");
+const mainScreen = document.getElementById("main-screen");
+const listaScreen = document.getElementById("lista-screen");
+const entrarBtn = document.getElementById("entrar-btn");
+const nomeAlunoInput = document.getElementById("nomeAluno");
+const serieAlunoInput = document.getElementById("serieAluno");
+const welcomeText = document.getElementById("welcome");
+const eletivasList = document.getElementById("eletivas-list");
+const confirmarBtn = document.getElementById("confirmar-btn");
+const mensagem = document.getElementById("mensagem");
+const loginError = document.getElementById("login-error");
+const eletivaNome = document.getElementById("eletiva-nome");
+const vagasInfo = document.getElementById("vagas-info");
+const alunosLista = document.getElementById("alunos-lista");
+const sairBtn = document.getElementById("sair-btn");
+const toggleThemeBtn = document.getElementById("toggle-theme");
+
+const adminPanel = document.getElementById("admin-panel");
+const adminListas = document.getElementById("admin-listas");
+const fecharAdminBtn = document.getElementById("fechar-admin");
+
+// Variáveis de estado
+let alunoAtual = null;
+let serieAtual = null;
+let eletivaEscolhida = null;
+let selectedCard = null;
+
+// ===== INICIALIZAÇÃO =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Sistema de Eletivas iniciado com sucesso!');
+    carregarDadosLocalStorage();
+});
+
+// ===== LOGIN =====
+entrarBtn.addEventListener("click", fazerLogin);
+
+// Também permitir login com Enter
+nomeAlunoInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        fazerLogin();
+    }
+});
+
+serieAlunoInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        fazerLogin();
+    }
+});
+
+function fazerLogin() {
+    const nome = nomeAlunoInput.value.trim();
+    const serie = serieAlunoInput.value;
+    
+    if (!nome || !serie) {
+        mostrarErro(loginError, "Preencha todos os campos obrigatórios!");
+        return;
+    }
+    
+    if (nome.length < 3) {
+        mostrarErro(loginError, "Digite um nome completo válido!");
+        return;
+    }
+    
+    // Verificar se aluno já escolheu eletiva
+    const alunoExistente = alunosGerais.find(aluno => 
+        aluno.nome.toLowerCase() === nome.toLowerCase() && aluno.serie === serie
+    );
+    
+    if (alunoExistente) {
+        mostrarErro(loginError, "Você já escolheu uma eletiva! Entre em contato com a administração para alterações.");
+        return;
+    }
+    
+    alunoAtual = nome;
+    serieAtual = serie;
+    
+    // Transição suave entre telas
+    loginScreen.style.opacity = '1';
+    let opacity = 1;
+    const fadeOut = setInterval(() => {
+        opacity -= 0.05;
+        loginScreen.style.opacity = opacity;
+        if (opacity <= 0) {
+            clearInterval(fadeOut);
+            loginScreen.classList.add("hidden");
+            mainScreen.classList.remove("hidden");
+            mainScreen.style.opacity = '0';
+            
+            welcomeText.textContent = `Bem-vindo(a), ${alunoAtual} (${serieAtual})!`;
+            renderEletivas();
+            
+            // Fade in da próxima tela
+            let fadeIn = 0;
+            const fadeInInterval = setInterval(() => {
+                fadeIn += 0.05;
+                mainScreen.style.opacity = fadeIn;
+                if (fadeIn >= 1) {
+                    clearInterval(fadeInInterval);
+                }
+            }, 30);
+        }
+    }, 30);
+}
+
+// ===== RENDERIZAÇÃO DE ELETIVAS =====
+function renderEletivas() {
+    eletivasList.innerHTML = "";
+    
+    eletivas.forEach((eletiva, idx) => {
+        const card = document.createElement("div");
+        const isLowVagas = eletiva.vagas > 0 && eletiva.vagas <= 5;
+        const vagasClass = isLowVagas ? 'low-vagas' : '';
+        
+        card.className = `eletiva-card ${eletiva.vagas === 0 ? 'disabled' : ''}`;
+        card.innerHTML = `
+            <input type="radio" name="eletiva" id="eletiva${idx}" value="${idx}" ${eletiva.vagas === 0 ? "disabled" : ""}>
+            <label for="eletiva${idx}" class="eletiva-label">
+                <div class="eletiva-icon">${eletiva.icon}</div>
+                <div class="eletiva-name">${eletiva.nome}</div>
+                <div class="eletiva-vagas ${vagasClass}">${eletiva.vagas} vaga(s) restante(s)</div>
+                <small>${eletiva.descricao}</small>
+            </label>
+        `;
+        
+        const radio = card.querySelector('input[type="radio"]');
+        
+        radio.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                // Remove seleção anterior
+                if (selectedCard) {
+                    selectedCard.classList.remove('selected');
+                }
+                // Adiciona seleção atual
+                card.classList.add('selected');
+                selectedCard = card;
+                
+                // Efeito visual de confirmação
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    card.style.transform = '';
+                }, 150);
+            }
+        });
+        
+        // Efeitos hover
+        if (eletiva.vagas > 0) {
+            card.addEventListener('mouseenter', () => {
+                if (!card.classList.contains('selected')) {
+                    card.style.transform = 'translateY(-5px) scale(1.02)';
+                }
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                if (!card.classList.contains('selected')) {
+                    card.style.transform = '';
+                }
+            });
+        }
+        
+        eletivasList.appendChild(card);
+    });
+}
+
+// ===== CONFIRMAR ESCOLHA =====
+confirmarBtn.addEventListener("click", confirmarEscolha);
+
+function confirmarEscolha() {
+    const selecionada = document.querySelector('input[name="eletiva"]:checked');
+    
+    if (!selecionada) {
+        mostrarErro(mensagem, "Por favor, escolha uma eletiva antes de confirmar!");
+        return;
+    }
+    
+    const idx = parseInt(selecionada.value);
+    eletivaEscolhida = eletivas[idx];
+    
+    if (eletivaEscolhida.vagas <= 0) {
+        mostrarErro(mensagem, "Esta eletiva está cheia! Por favor, escolha outra opção.");
+        return;
+    }
+    
+    // Efeito visual de confirmação
+    confirmarBtn.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        confirmarBtn.style.transform = '';
+    }, 150);
+    
+    // Registrar aluno na eletiva
+    eletivaEscolhida.alunos.push({ 
+        nome: alunoAtual, 
+        serie: serieAtual,
+        timestamp: new Date().toISOString()
+    });
+    eletivaEscolhida.vagas--;
+    
+    // Registrar no array geral
+    alunosGerais.push({ 
+        nome: alunoAtual, 
+        serie: serieAtual, 
+        eletiva: eletivaEscolhida.nome,
+        timestamp: new Date().toISOString()
+    });
+    
+    // Salvar dados no localStorage
+    salvarDadosLocalStorage();
+    
+    // Transição para tela de lista
+    setTimeout(() => {
+        mainScreen.classList.add("hidden");
+        listaScreen.classList.remove("hidden");
+        renderLista();
+    }, 500);
+}
+
+// ===== RENDERIZAR LISTA =====
+function renderLista() {
+    eletivaNome.textContent = `Eletiva: ${eletivaEscolhida.nome}`;
+    vagasInfo.textContent = `Vagas restantes: ${eletivaEscolhida.vagas}`;
+    alunosLista.innerHTML = "";
+    
+    // Ordenar alunos por série e nome
+    const alunosOrdenados = [...eletivaEscolhida.alunos].sort((a, b) => {
+        if (a.serie === b.serie) {
+            return a.nome.localeCompare(b.nome);
+        }
+        return a.serie.localeCompare(b.serie);
+    });
+    
+    alunosOrdenados.forEach((aluno, index) => {
+        const li = document.createElement("li");
+        li.textContent = `${aluno.nome} (${aluno.serie})`;
+        li.dataset.serie = aluno.serie;
+        
+        // Efeito de entrada sequencial
+        li.style.opacity = '0';
+        li.style.transform = 'translateX(-20px)';
+        setTimeout(() => {
+            li.style.transition = 'all 0.4s ease';
+            li.style.opacity = '1';
+            li.style.transform = 'translateX(0)';
+        }, index * 100);
+        
+        alunosLista.appendChild(li);
+    });
+}
+
+// ===== SAIR =====
+sairBtn.addEventListener("click", sairSistema);
+
+function sairSistema() {
+    // Efeito de saída
+    listaScreen.style.opacity = '1';
+    let opacity = 1;
+    const fadeOut = setInterval(() => {
+        opacity -= 0.05;
+        listaScreen.style.opacity = opacity;
+        if (opacity <= 0) {
+            clearInterval(fadeOut);
+            listaScreen.classList.add("hidden");
+            loginScreen.classList.remove("hidden");
+            loginScreen.style.opacity = '0';
+            
+            // Resetar formulário
+            nomeAlunoInput.value = "";
+            serieAlunoInput.value = "";
+            alunoAtual = null;
+            serieAtual = null;
+            eletivaEscolhida = null;
+            selectedCard = null;
+            
+            // Fade in da tela de login
+            let fadeIn = 0;
+            const fadeInInterval = setInterval(() => {
+                fadeIn += 0.05;
+                loginScreen.style.opacity = fadeIn;
+                if (fadeIn >= 1) {
+                    clearInterval(fadeInInterval);
+                }
+            }, 30);
+        }
+    }, 30);
+}
+
+// ===== TEMA =====
+toggleThemeBtn.addEventListener("click", alternarTema);
+
+function alternarTema() {
+    document.body.classList.toggle("dark-mode");
+    toggleThemeBtn.style.transform = 'rotate(180deg)';
+    setTimeout(() => {
+        toggleThemeBtn.style.transform = '';
+    }, 300);
+    
+    // Salvar preferência do tema
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    localStorage.setItem('darkMode', isDarkMode);
+}
+
+// ===== PAINEL ADMINISTRATIVO =====
+document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.shiftKey && e.code === "KeyA") {
+        e.preventDefault();
+        toggleAdminPanel();
+    }
+});
+
+fecharAdminBtn.addEventListener("click", () => {
+    adminPanel.classList.add("hidden");
+});
+
+function toggleAdminPanel() {
+    const visivel = !adminPanel.classList.contains("hidden");
+    
+    if (visivel) {
+        adminPanel.classList.add("hidden");
+    } else {
+        // Verificar senha de administração (simples para demo)
+        const senha = prompt("Digite a senha de administração:");
+        if (senha === "admin123") {
+            renderAdmin();
+            adminPanel.classList.remove("hidden");
+        } else {
+            alert("Senha incorreta!");
+        }
+    }
+}
+
+function renderAdmin() {
+    adminListas.innerHTML = "";
+    
+    // Estatísticas gerais
+    const totalAlunos = alunosGerais.length;
+    const eletivasComVagas = eletivas.filter(e => e.vagas > 0).length;
+    const eletivasCheias = eletivas.filter(e => e.vagas === 0).length;
+    
+    const statsDiv = document.createElement("div");
+    statsDiv.className = "admin-box";
+    statsDiv.innerHTML = `
+        <h3>📊 Estatísticas Gerais</h3>
+        <p><strong>Total de Alunos:</strong> ${totalAlunos}</p>
+        <p><strong>Eletivas com Vagas:</strong> ${eletivasComVagas}</p>
+        <p><strong>Eletivas Cheias:</strong> ${eletivasCheias}</p>
+        <p><strong>Taxa de Ocupação:</strong> ${Math.round((totalAlunos / (eletivas.length * 20)) * 100)}%</p>
+    `;
+    adminListas.appendChild(statsDiv);
+    
+    // Lista de cada eletiva
+    eletivas.forEach(eletiva => {
+        const div = document.createElement("div");
+        div.className = "admin-box";
+
+        const titulo = document.createElement("h3");
+        titulo.textContent = `${eletiva.icon} ${eletiva.nome} - ${eletiva.vagas} vaga(s) restante(s)`;
+        div.appendChild(titulo);
+
+        const lista = document.createElement("ul");
+        
+        if (eletiva.alunos.length === 0) {
+            const li = document.createElement("li");
+            li.textContent = "Nenhum aluno inscrito ainda";
+            li.style.background = "rgba(255, 215, 0, 0.1)";
+            li.style.color = "#666";
+            lista.appendChild(li);
+        } else {
+            // Ordenar alunos por série
+            const alunosOrdenados = [...eletiva.alunos].sort((a, b) => a.serie.localeCompare(b.serie));
+            
+            alunosOrdenados.forEach((aluno, index) => {
+                const li = document.createElement("li");
+                li.textContent = `${aluno.nome} (${aluno.serie})`;
+                li.dataset.serie = aluno.serie;
+                
+                // Efeito de entrada
+                li.style.opacity = '0';
+                li.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    li.style.transition = 'all 0.3s ease';
+                    li.style.opacity = '1';
+                    li.style.transform = 'translateY(0)';
+                }, index * 50);
+                
+                lista.appendChild(li);
+            });
+        }
+
+        div.appendChild(lista);
+        adminListas.appendChild(div);
+    });
+}
+
+// ===== LOCAL STORAGE =====
+function salvarDadosLocalStorage() {
+    const dados = {
+        eletivas: eletivas,
+        alunosGerais: alunosGerais,
+        ultimaAtualizacao: new Date().toISOString()
+    };
+    localStorage.setItem('sistemaEletivas', JSON.stringify(dados));
+}
+
+function carregarDadosLocalStorage() {
+    const dadosSalvos = localStorage.getItem('sistemaEletivas');
+    
+    if (dadosSalvos) {
+        try {
+            const dados = JSON.parse(dadosSalvos);
+            
+            // Carregar eletivas
+            dados.eletivas.forEach((eletivaSalva, index) => {
+                if (eletivas[index]) {
+                    eletivas[index].alunos = eletivaSalva.alunos || [];
+                    eletivas[index].vagas = eletivaSalva.vagas !== undefined ? eletivaSalva.vagas : 20;
+                }
+            });
+            
+            // Carregar alunos gerais
+            if (dados.alunosGerais) {
+                alunosGerais.length = 0;
+                alunosGerais.push(...dados.alunosGerais);
+            }
+            
+            console.log('Dados carregados do localStorage com sucesso!');
+        } catch (error) {
+            console.error('Erro ao carregar dados do localStorage:', error);
+        }
+    }
+    
+    // Carregar preferência do tema
+    const darkModeSalvo = localStorage.getItem('darkMode');
+    if (darkModeSalvo === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+}
+
+// ===== FUNÇÕES UTILITÁRIAS =====
+function mostrarErro(elemento, mensagem) {
+    elemento.textContent = mensagem;
+    elemento.style.animation = 'shake 0.5s ease-in-out';
+    setTimeout(() => {
+        elemento.style.animation = '';
+    }, 500);
+}
+
+// Adicionar animação de shake para erros
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-8px); }
+        75% { transform: translateX(8px); }
+    }
+`;
+document.head.appendChild(style);
+
+// Exportar dados (para administração)
+function exportarDados() {
+    const dados = {
+        eletivas: eletivas,
+        alunosGerais: alunosGerais,
+        exportadoEm: new Date().toISOString()
+    };
+    
+    const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `eletivas_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Adicionar função de exportação ao painel admin
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.code === "KeyE") {
+        e.preventDefault();
+        exportarDados();
+    }
+});
+
+console.log(`
+╔══════════════════════════════════════════════════════════════╗
+║                 SISTEMA DE ELETIVAS INICIADO                 ║
+║                                                              ║
+║  📊 Painel Admin: Ctrl + Shift + A                          ║
+║  📤 Exportar Dados: Ctrl + Shift + E                        ║
+║  🌙 Tema Escuro: Botão no canto superior direito            ║
+║                                                              ║
+║  Desenvolvido para Escola Estadual João Roberto Moreira     ║
+╚══════════════════════════════════════════════════════════════╝
+`);
