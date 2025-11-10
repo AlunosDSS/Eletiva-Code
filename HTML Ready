@@ -23,7 +23,9 @@
                 <label for="serieAluno">Série <span class="necessario">*</span></label>
                 <select id="serieAluno">
                     <option value="">Selecione sua série</option>
-                    <option>9º Ano</option>
+                    <option>9º A</option>
+                    <option>9º B</option>
+                    <option>9º C</option>
                     <option>1º A</option>
                     <option>1º B</option>
                     <option>2º A</option>
