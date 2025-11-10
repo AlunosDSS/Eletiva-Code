@@ -1,0 +1,738 @@
+/* ====== RESET E GERAL ====== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #006400, #FFD700, #228B22);
+    color: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.5s ease, color 0.5s ease;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+/* ====== CONTAINER PRINCIPAL ====== */
+#app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px;
+    position: relative;
+}
+
+/* ====== BOTÃO DE TEMA ====== */
+.theme-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #006400, #FFD700, #32CD32);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.3em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.theme-btn:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+}
+
+/* ====== TELAS ====== */
+.screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 100, 0, 0.25);
+    width: 100%;
+    max-width: 1000px;
+    transition: all 0.5s ease;
+    border: 3px solid #FFD700;
+    backdrop-filter: blur(10px);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.error {
+    color: #8B4513;
+    font-size: 0.95em;
+    margin-top: 12px;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px 12px;
+    background: rgba(139, 69, 19, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #8B4513;
+}
+
+/* ====== LOGIN ====== */
+.login-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0, 100, 0, 0.3);
+    width: 100%;
+    max-width: 500px;
+    border: 3px solid #006400;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #006400, #FFD700, #32CD32);
+    transition: left 0.6s ease;
+}
+
+.login-box:hover::before {
+    left: 0;
+}
+
+.brasao {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 4px solid #006400;
+    background: #fff;
+    padding: 8px;
+    box-shadow: 0 0 20px rgba(0, 100, 0, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.brasao:hover {
+    transform: scale(1.05) rotate(5deg);
+}
+
+.login-box h2 {
+    color: #006400;
+    margin-bottom: 8px;
+    font-size: 2em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-box h3 {
+    color: #228B22;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.login-box p {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.1em;
+}
+
+label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    color: #006400;
+    margin-top: 15px;
+    width: 100%;
+    font-size: 1.1em;
+}
+
+.necessario {
+    color: #8B4513;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    margin: 10px 0 20px 0;
+    padding: 15px;
+    border: 2px solid #FFD700;
+    border-radius: 12px;
+    font-size: 1.1em;
+    background: #fff;
+    color: #1a1a1a;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #006400;
+    box-shadow: 0 0 15px rgba(0, 100, 0, 0.4);
+    transform: translateY(-2px);
+}
+
+input::placeholder {
+    color: #999;
+}
+
+/* ====== BOTÕES PRINCIPAIS ====== */
+.btn-primary, .btn-secondary {
+    background: linear-gradient(135deg, #006400, #228B22);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 18px 30px;
+    width: 100%;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    font-size: 1.2em;
+    border: 3px solid #FFD700;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+    font-family: inherit;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #FFD700, #DAA520);
+    color: #333;
+}
+
+.btn-primary::before, .btn-secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(255, 215, 0, 0.6);
+}
+
+.btn-primary:hover::before, .btn-secondary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:active, .btn-secondary:active {
+    transform: translateY(-1px) scale(1.01);
+}
+
+.btn-text {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.btn-icon {
+    font-size: 1.3em;
+    transition: transform 0.3s ease;
+    font-weight: bold;
+}
+
+.btn-primary:hover .btn-icon {
+    transform: translateX(5px);
+}
+
+.btn-secondary:hover .btn-icon {
+    transform: translateX(-5px);
+}
+
+/* ====== ELETIVAS ====== */
+.eletivas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    width: 100%;
+    margin: 25px 0;
+}
+
+.eletiva-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 3px solid #FFD700;
+    border-radius: 18px;
+    padding: 25px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.eletiva-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #006400, #FFD700, #32CD32);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.eletiva-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 15px 35px rgba(0, 100, 0, 0.25);
+    background: linear-gradient(135deg, #ffffff, #f0f4f8);
+}
+
+.eletiva-card:hover::before {
+    transform: scaleX(1);
+}
+
+.eletiva-card input[type="radio"] {
+    display: none;
+}
+
+.eletiva-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    gap: 15px;
+    height: 100%;
+    justify-content: center;
+}
+
+.eletiva-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.eletiva-name {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #006400;
+    transition: color 0.3s ease;
+    line-height: 1.3;
+}
+
+.eletiva-vagas {
+    font-size: 1.1em;
+    color: #228B22;
+    font-weight: 600;
+    padding: 8px 16px;
+    background: rgba(34, 139, 34, 0.15);
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+/* Estados da eletiva */
+.eletiva-card.selected {
+    background: linear-gradient(135deg, #006400, #228B22);
+    border-color: #006400;
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 100, 0, 0.35);
+}
+
+.eletiva-card.selected .eletiva-name {
+    color: #fff;
+}
+
+.eletiva-card.selected .eletiva-vagas {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #FFD700;
+}
+
+.eletiva-card.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: linear-gradient(135deg, #e0e0e0, #c0c0c0);
+    transform: none !important;
+}
+
+.eletiva-card.disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.eletiva-card.disabled .eletiva-name {
+    color: #666;
+}
+
+.eletiva-card.disabled .eletiva-vagas {
+    color: #666;
+    background: rgba(102, 102, 102, 0.1);
+}
+
+/* Efeito de pulso para vagas baixas */
+.eletiva-card:not(.disabled):not(.selected) .eletiva-vagas.low-vagas {
+    animation: pulse 2s infinite;
+    background: rgba(255, 165, 0, 0.2);
+    color: #FF8C00;
+    border-color: #FF8C00;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 140, 0, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(255, 140, 0, 0.6);
+    }
+}
+
+/* ====== LISTAS DE ALUNOS ====== */
+ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 15px;
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+ul li {
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: left;
+    border-left: 5px solid #FFD700;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1em;
+}
+
+ul li:hover {
+    transform: translateX(8px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+ul li::before {
+    content: '👤';
+    font-size: 1.2em;
+}
+
+/* Cores por série - usando tons de verde */
+ul li[data-serie="9º Ano"] { background: #E8F5E8; color: #006400; border-left-color: #006400; }
+ul li[data-serie="1º A"] { background: #F0F8E8; color: #228B22; border-left-color: #228B22; }
+ul li[data-serie="1º B"] { background: #F5F5E8; color: #556B2F; border-left-color: #556B2F; }
+ul li[data-serie="2º A"] { background: #E8F8F0; color: #2E8B57; border-left-color: #2E8B57; }
+ul li[data-serie="2º B"] { background: #F0E8F8; color: #483D8B; border-left-color: #483D8B; }
+ul li[data-serie="3º A"] { background: #F8F0E8; color: #8B4513; border-left-color: #8B4513; }
+ul li[data-serie="3º B"] { background: #E8F0F8; color: #1E6B52; border-left-color: #1E6B52; }
+
+/* ====== PAINEL ADMIN ====== */
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    width: 100%;
+    margin: 25px 0;
+}
+
+.admin-box {
+    background: linear-gradient(135deg, #fff, #f8f9fa);
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0, 100, 0, 0.2);
+    color: #006400;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: all 0.4s ease;
+    border: 3px solid #FFD700;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+}
+
+.admin-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #006400, #FFD700, #32CD32);
+}
+
+.admin-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 100, 0, 0.25);
+}
+
+.admin-box h3 {
+    color: #228B22;
+    border-bottom: 3px solid #FFD700;
+    padding-bottom: 12px;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+/* ====== RESPONSIVIDADE ====== */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+    
+    #app {
+        padding: 10px;
+    }
+    
+    .screen {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .brasao {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .login-box {
+        padding: 30px 20px;
+    }
+    
+    .login-box h2 {
+        font-size: 1.6em;
+    }
+    
+    .login-box h3 {
+        font-size: 1.1em;
+    }
+    
+    input, select, button {
+        font-size: 1em;
+        padding: 12px;
+    }
+    
+    .eletivas-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .admin-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .btn-primary, .btn-secondary {
+        padding: 15px 20px;
+        font-size: 1.1em;
+    }
+    
+    .eletiva-card {
+        padding: 20px;
+        min-height: 160px;
+    }
+    
+    .eletiva-icon {
+        font-size: 2.5em;
+    }
+    
+    .eletiva-name {
+        font-size: 1.2em;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .eletivas-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .admin-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    .eletivas-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .admin-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ====== TEMA ESCURO ====== */
+.dark-mode body {
+    background: linear-gradient(135deg, #003300, #664D00, #1A471A);
+    color: #e0e0e0;
+}
+
+.dark-mode .screen {
+    background: rgba(25, 25, 25, 0.95);
+    color: #e0e0e0;
+    border-color: #B8860B;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.dark-mode .login-box {
+    background: rgba(35, 35, 35, 0.98);
+    border-color: #004D00;
+    box-shadow: 0 12px 35px rgba(0, 77, 0, 0.4);
+}
+
+.dark-mode .eletiva-card {
+    background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+    border-color: #B8860B;
+    color: #e0e0e0;
+}
+
+.dark-mode .eletiva-card:hover {
+    background: linear-gradient(135deg, #333, #444);
+}
+
+.dark-mode .eletiva-card.selected {
+    background: linear-gradient(135deg, #004D00, #006400);
+    border-color: #004D00;
+}
+
+.dark-mode .eletiva-card.disabled {
+    background: linear-gradient(135deg, #444, #555);
+}
+
+.dark-mode input, .dark-mode select {
+    background: #333;
+    color: #fff;
+    border: 2px solid #B8860B;
+}
+
+.dark-mode input:focus, .dark-mode select:focus {
+    border-color: #004D00;
+    box-shadow: 0 0 15px rgba(0, 77, 0, 0.6);
+}
+
+.dark-mode input::placeholder {
+    color: #bbb;
+}
+
+.dark-mode .theme-btn {
+    background: linear-gradient(135deg, #004D00, #B8860B, #228B22);
+    color: #FFD700;
+}
+
+.dark-mode .admin-box {
+    background: linear-gradient(135deg, #2a2a2a, #333);
+    color: #90EE90;
+    border-color: #B8860B;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.15);
+}
+
+.dark-mode .admin-box h3 {
+    color: #90EE90;
+    border-color: #B8860B;
+}
+
+.dark-mode .btn-primary {
+    background: linear-gradient(135deg, #004D00, #006400);
+    border-color: #B8860B;
+}
+
+.dark-mode .btn-secondary {
+    background: linear-gradient(135deg, #B8860B, #DAA520);
+    color: #333;
+}
+
+.dark-mode .btn-primary:hover, .dark-mode .btn-secondary:hover {
+    box-shadow: 0 12px 30px rgba(255, 215, 0, 0.4);
+}
+
+.dark-mode .login-box h2 {
+    color: #32CD32;
+}
+
+.dark-mode .login-box h3 {
+    color: #90EE90;
+}
+
+.dark-mode label {
+    color: #32CD32;
+}
+
+.dark-mode .error {
+    color: #FFA07A;
+    background: rgba(255, 160, 122, 0.1);
+    border-left-color: #FFA07A;
+}
+
+/* Cores das séries no tema escuro */
+.dark-mode ul li[data-serie="9º Ano"] { background: #1A3D1A; color: #90EE90; border-left-color: #90EE90; }
+.dark-mode ul li[data-serie="1º A"] { background: #2A3D1A; color: #ADFF2F; border-left-color: #ADFF2F; }
+.dark-mode ul li[data-serie="1º B"] { background: #3D3A1A; color: #FFE4B5; border-left-color: #FFE4B5; }
+.dark-mode ul li[data-serie="2º A"] { background: #1A3D2A; color: #98FB98; border-left-color: #98FB98; }
+.dark-mode ul li[data-serie="2º B"] { background: #2A1A3D; color: #D8BFD8; border-left-color: #D8BFD8; }
+.dark-mode ul li[data-serie="3º A"] { background: #3D2A1A; color: #FFDAB9; border-left-color: #FFDAB9; }
+.dark-mode ul li[data-serie="3º B"] { background: #1A2A3D; color: #B0E0E6; border-left-color: #B0E0E6; }
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 100, 0, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #006400, #FFD700);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #004D00, #DAA520);
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.screen:not(.hidden) {
+    animation: fadeIn 0.5s ease-out;
+}
