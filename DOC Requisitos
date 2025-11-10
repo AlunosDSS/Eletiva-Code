@@ -1,4 +1,5 @@
-[RF-007] Filtrar eventos por categoria
+Exemplo DOC
+[RF-001] Filtrar eventos por categoria
 
 Descrição: Filtrar eventos por tipo (prova, reunião, aula, feriado).
 Prioridade: Média
@@ -7,3 +8,14 @@ Processamento: Buscar eventos da categoria e renderizar.
 Saída: Lista filtrada.
 Regras de Negócio: Nenhuma.
 Atores: Todos os usuários.
+
+
+ELETIVA-CODE
+{RF-001} Mudar o botão de Troca de tema
+
+Descrição: Um botão que muda o tema do site de claro á escuro.
+Prioridade: Baixa.
+Entrada: Clicar no botão para mudar o tema.
+Saída: Tema trocado.
+Atores: Todos os usúarios
+
