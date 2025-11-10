@@ -1,1 +1,9 @@
+[RF-007] Filtrar eventos por categoria
 
+Descrição: Filtrar eventos por tipo (prova, reunião, aula, feriado).
+Prioridade: Média
+Entrada: Categoria selecionada.
+Processamento: Buscar eventos da categoria e renderizar.
+Saída: Lista filtrada.
+Regras de Negócio: Nenhuma.
+Atores: Todos os usuários.
