@@ -1,15 +1,3 @@
-Exemplo DOC
-[RF-001] Filtrar eventos por categoria
-
-Descrição: Filtrar eventos por tipo (prova, reunião, aula, feriado).
-Prioridade: Média
-Entrada: Categoria selecionada.
-Processamento: Buscar eventos da categoria e renderizar.
-Saída: Lista filtrada.
-Regras de Negócio: Nenhuma.
-Atores: Todos os usuários.
-
-
 ELETIVA-CODE
 {RF-001} Mudar o botão de Troca de tema
 
@@ -18,4 +6,12 @@ Prioridade: Baixa.
 Entrada: Clicar no botão para mudar o tema.
 Saída: Tema trocado.
 Atores: Todos os usúarios
+
+{RF-002} Poder retirar o aluno da eletiva no painel de administrador
+
+Descrição: Retirar ou alterar o aluno de uma eletiva.
+Prioridade: Alta.
+Entrada: Botão para alterar ou remover Aluno.
+Saída: Aluno Removido ou alterado.
+Atores: Administradores.
 
